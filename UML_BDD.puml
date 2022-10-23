@@ -1,0 +1,136 @@
+@startuml
+abstract class org.centrale.worldofecn.world.Objet {
++ <<Create>> Objet(World)
+}
+abstract class org.centrale.worldofecn.world.Monstre {
++ <<Create>> Monstre(World)
+}
+class org.centrale.worldofecn.world.Lapin {
++ <<Create>> Lapin(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+abstract class org.centrale.worldofecn.world.Creature {
++ <<Create>> Creature(World)
+}
+class org.centrale.worldofecn.world.Joueur {
+- String nom
+- String login
+- String password
+- Personnage personnage
++ <<Create>> Joueur(String)
++ <<Create>> Joueur(String,String,String)
++ String getNom()
++ void setNom(String)
++ String getLogin()
++ void setLogin(String)
++ String getPassword()
++ void setPassword(String)
++ Personnage getPersonnage()
++ void setPersonnage(Personnage)
+}
+class org.centrale.worldofecn.WorldOfECN {
++ {static} void main(String[])
+}
+class org.centrale.worldofecn.world.Archer {
++ <<Create>> Archer(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+abstract class org.centrale.worldofecn.world.Personnage {
++ <<Create>> Personnage(World)
+}
+class org.centrale.worldofecn.world.Point2D {
+- int x
+- int y
++ <<Create>> Point2D()
++ <<Create>> Point2D(int,int)
++ <<Create>> Point2D(Point2D)
++ int getX()
++ void setX(int)
++ int getY()
++ void setY(int)
+}
+class org.centrale.worldofecn.world.Loup {
++ <<Create>> Loup(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+abstract class org.centrale.worldofecn.world.ElementDeJeu {
+- Point2D position
++ <<Create>> ElementDeJeu(World)
++ Point2D getPosition()
++ void setPosition(Point2D)
++ {abstract}void saveToDatabase(Connection,String,int)
++ {abstract}void getFromDatabase(ResultSet)
+}
+class org.centrale.worldofecn.world.PotionSoin {
++ <<Create>> PotionSoin(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+class org.centrale.worldofecn.world.Guerrier {
++ <<Create>> Guerrier(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+class org.centrale.worldofecn.DatabaseTools {
+- String login
+- String password
+- String url
+- Connection connection
++ <<Create>> DatabaseTools()
++ void connect()
++ void disconnect()
++ Integer getPlayerID(String,String)
++ void saveWorld(Integer,String,String,World)
++ void readWorld(Integer,String,String,World)
++ void removeWorld(Integer,String,String)
+}
+class org.centrale.worldofecn.world.Paysan {
++ <<Create>> Paysan(World)
++ void saveToDatabase(Connection,String,int)
++ void getFromDatabase(ResultSet)
+}
+class org.centrale.worldofecn.world.World {
+- {static} int MAXPEOPLE
+- {static} int MAXMONSTERS
+- {static} int MAXOBJECTS
+- Integer width
+- Integer height
++ List<ElementDeJeu> listElements
+- Joueur player
++ <<Create>> World()
++ <<Create>> World(int,int)
+- void init()
++ Integer getWidth()
++ void setWidth(Integer)
++ Integer getHeight()
++ void setHeight(Integer)
++ void setHeightWidth(Integer,Integer)
+- ElementDeJeu check(ElementDeJeu)
+- void generatePersonnages(int)
+- ElementDeJeu generateOnePersonnage(int)
+- void generateMonsters(int)
+- ElementDeJeu generateOneMonster(int)
+- void generateObjects(int)
+- ElementDeJeu generateOneObject(int)
+- void generatePlayer(int)
+- void generate()
++ void setPlayer(String)
++ void saveToDatabase(Connection,String,String)
++ void getFromDatabase(Connection,String,String)
+}
+
+
+org.centrale.worldofecn.world.ElementDeJeu <|-- org.centrale.worldofecn.world.Objet
+org.centrale.worldofecn.world.Creature <|-- org.centrale.worldofecn.world.Monstre
+org.centrale.worldofecn.world.Monstre <|-- org.centrale.worldofecn.world.Lapin
+org.centrale.worldofecn.world.ElementDeJeu <|-- org.centrale.worldofecn.world.Creature
+org.centrale.worldofecn.world.Personnage <|-- org.centrale.worldofecn.world.Archer
+org.centrale.worldofecn.world.Creature <|-- org.centrale.worldofecn.world.Personnage
+org.centrale.worldofecn.world.Monstre <|-- org.centrale.worldofecn.world.Loup
+org.centrale.worldofecn.world.Objet <|-- org.centrale.worldofecn.world.PotionSoin
+org.centrale.worldofecn.world.Personnage <|-- org.centrale.worldofecn.world.Guerrier
+org.centrale.worldofecn.world.Personnage <|-- org.centrale.worldofecn.world.Paysan
+@enduml
