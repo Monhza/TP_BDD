@@ -1,25 +1,20 @@
 /* --------------------------------------------------------------------------------
  * WoE Tools
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
  * -------------------------------------------------------------------------------- */
 package org.centrale.worldofecn;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.centrale.worldofecn.world.World;
+
+import java.sql.*;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.*;
-
-import org.centrale.worldofecn.world.World;
 
 /**
- *
  * @author ECN
  */
 public class DatabaseTools {
@@ -84,6 +79,7 @@ public class DatabaseTools {
 
     /**
      * get Player ID
+     *
      * @param nomJoueur
      * @param password
      * @return
@@ -101,13 +97,12 @@ public class DatabaseTools {
             rs.next(); //on va à la ligne suivante
             if (rs == null) { //table résultat vide
                 return null;
-            }
-            else { //on suppose résultat unique on test pas ici
+            } else { //on suppose résultat unique on test pas ici
                 return rs.getInt("clesteam");
             }
         }
         //sinon le prepared statement rale
-        catch (Exception e ){
+        catch (Exception e) {
             System.out.println(e);
             return null;
         }
@@ -116,6 +111,7 @@ public class DatabaseTools {
 
     /**
      * save world to database
+     *
      * @param idJoueur
      * @param nomPartie
      * @param nomSauvegarde
@@ -136,7 +132,7 @@ public class DatabaseTools {
 
         }
         //sinon le prepared statement rale
-        catch (Exception e ){
+        catch (Exception e) {
             System.out.println(e);
 
         }
@@ -151,6 +147,7 @@ public class DatabaseTools {
 
     /**
      * get world from database
+     *
      * @param idJoueur
      * @param nomPartie
      * @param nomSauvegarde
@@ -163,7 +160,7 @@ public class DatabaseTools {
         ResultSet rs;
         String nomSave;
 
-        if (nomSauvegarde == null){
+        if (nomSauvegarde == null) {
             nomSauvegarde = "auto";
         }
 
@@ -181,30 +178,29 @@ public class DatabaseTools {
 
             rs = stmt.executeQuery();
 
-            if (!rs.next()){
+            if (!rs.next()) {
                 throw new Exception("Cette sauvegarde n'existe pas");
             }
 
             nomSave = rs.getString("idsauvegarde");
 
-            monde.getFromDatabase(connection, nomPartie, nomSauvegarde);
+            monde.getFromDatabase(connection, nomPartie, nomSave);
 
         }
         //sinon le prepared statement rale
-        catch (Exception e ){
+        catch (Exception e) {
             System.out.println(e);
-
-
         }
     }
 
     /**
      * Méthode qui nous permet d'effacer une sauvegarde et un monde de la base de données
+     *
      * @param idJoueur
      * @param nomPartie
      * @param nomSauvegarde
      */
-    public void removeWorld(Integer idJoueur, String nomPartie, String nomSauvegarde){
+    public void removeWorld(Integer idJoueur, String nomPartie, String nomSauvegarde) {
         String query;
         PreparedStatement stmt;
 
@@ -221,7 +217,7 @@ public class DatabaseTools {
         //C'est chiant parce qu'on ne peut avoir qu'une sauvegarde avec un certain nom
         //sur tous les jeux confondus, mais au moins, c'est plus facile à effacer
 
-        for (int i = 0 ; i < listeTables.length; i++){
+        for (int i = 0; i < listeTables.length; i++) {
 
             query = "DELETE FROM " +
                     listeTables[i] +
@@ -235,7 +231,7 @@ public class DatabaseTools {
                 stmt.executeUpdate();
             }
             //sinon le prepared statement rale
-            catch (Exception e ){
+            catch (Exception e) {
                 System.out.println(e);
             }
         }

@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------
  * WoE
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
@@ -13,11 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- *
  * @author kwyhr
  */
 public class PotionSoin extends Objet {
-    
+
     /**
      *
      */
@@ -26,13 +25,15 @@ public class PotionSoin extends Objet {
     }
 
     /**
-     *
      * @param connection
      */
     @Override
     public void saveToDatabase(Connection connection, String saveName, int idElement) {
         String query;
         PreparedStatement stmt;
+
+        // On sauvegarde d'abord l'objet dans la table correspondant à sa classe mère
+        super.saveToDatabase(connection, saveName, idElement);
 
         //Maintenant, on entre les valeurs de l'instance dans sa classe spécifique
         query = "INSERT INTO objets (idelement, idsauvegarde)\n" +
@@ -45,13 +46,14 @@ public class PotionSoin extends Objet {
 
             stmt.executeUpdate();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
     }
 
     /**
+     *
      */
     @Override
     public void getFromDatabase(ResultSet rs) {
@@ -64,7 +66,7 @@ public class PotionSoin extends Objet {
             Xtemp = rs.getInt("positionx");
             Ytemp = rs.getInt("positiony");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -75,5 +77,5 @@ public class PotionSoin extends Objet {
         // Inutile de donner à l'instance
 
     }
-    
+
 }

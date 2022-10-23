@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------
  * WoE
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
  * @author ECN
  */
 public class World {
@@ -24,11 +23,9 @@ public class World {
     private static final int MAXPEOPLE = 20;
     private static final int MAXMONSTERS = 10;
     private static final int MAXOBJECTS = 20;
-
+    public List<ElementDeJeu> listElements;
     private Integer width;
     private Integer height;
-
-    public List<ElementDeJeu> listElements;
     private Joueur player;
 
     /**
@@ -41,7 +38,7 @@ public class World {
     /**
      * Constructor for specific world size
      *
-     * @param width : world width
+     * @param width  : world width
      * @param height : world height
      */
     public World(int width, int height) {
@@ -59,7 +56,6 @@ public class World {
     }
 
     /**
-     *
      * @return
      */
     public Integer getWidth() {
@@ -67,7 +63,6 @@ public class World {
     }
 
     /**
-     *
      * @param width
      */
     public void setWidth(Integer width) {
@@ -75,7 +70,6 @@ public class World {
     }
 
     /**
-     *
      * @return
      */
     public Integer getHeight() {
@@ -83,7 +77,6 @@ public class World {
     }
 
     /**
-     *
      * @param height
      */
     public void setHeight(Integer height) {
@@ -91,7 +84,6 @@ public class World {
     }
 
     /**
-     *
      * @param height
      * @param width
      */
@@ -139,6 +131,7 @@ public class World {
 
     /**
      * Fonction générer qui permet de produire un personnage selon son type
+     *
      * @param typePerso
      */
     private ElementDeJeu generateOnePersonnage(int typePerso) {
@@ -284,7 +277,8 @@ public class World {
             item = (Personnage) check(item);
         }
         // Add to list
-        this.listElements.add(item);
+        //this.listElements.add(item);
+        this.player.setPersonnage(item);
     }
 
     /**
@@ -295,9 +289,9 @@ public class World {
 
         generatePlayer(1);
 
-        generatePersonnages(MAXPEOPLE);
-        generateMonsters(MAXMONSTERS);
-        generateObjects(MAXOBJECTS);
+        generatePersonnages(rand.nextInt(MAXPEOPLE));
+        generateMonsters(rand.nextInt(MAXMONSTERS));
+        generateObjects(rand.nextInt(MAXOBJECTS));
     }
 
     /**
@@ -327,7 +321,7 @@ public class World {
         Random rand = new Random();
 
         //Si la sauvegarde n'a pas de nom, alors, c'est une sauvegarde auto
-        if (saveName == null){
+        if (saveName == null) {
             saveName = "auto";
         }
 
@@ -342,17 +336,17 @@ public class World {
             stmt = connection.prepareStatement(query);
             rs = stmt.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 elementNomSaveEnregistre = rs.getString("idsauvegarde");
                 if (saveName.equals(elementNomSaveEnregistre)) {
                     doesSaveExit = true; // Si on trouve la meme sauvegarde, on le note
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
-        if (doesSaveExit){
+        if (doesSaveExit) {
             //Si la sauvegarde existe deja, on va devoir l'écraser
             //Mais pour l'instant, on déclenche juste une erreur
             throw new Exception("Une sauvegarde de ce nom existe deja");
@@ -369,10 +363,9 @@ public class World {
 
             stmt.executeUpdate();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-
 
 
         //Maintenant, on sauvegarde le jeu
@@ -388,7 +381,7 @@ public class World {
 
             stmt.executeUpdate();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -404,32 +397,15 @@ public class World {
 
             stmt.executeUpdate();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
 
         // On sauve tous les éléments du monde
-        for (ElementDeJeu element : listElements){
+        for (ElementDeJeu element : listElements) {
 
-            // D'abord, on entre les coordonnées de l'objet dans la table correspondante
-            query = "INSERT INTO elementdejeu (idelement, idsauvegarde, positionx, positiony)\n" +
-                    "VALUES (?, ?, ?, ?);";
-            try {
-                stmt = connection.prepareStatement(query);
-                stmt.setInt(1, idElement);
-                stmt.setString(2, saveName);
-                stmt.setInt(3, element.getPosition().getX());
-                stmt.setInt(4, element.getPosition().getY());
-
-
-                stmt.executeUpdate();
-
-            }catch (Exception e){
-                System.out.println(e);
-            }
-
-            // Puis on appelle la méthode spécifique à chaque classe
+            // On appelle la méthode spécifique à chaque classe
             element.saveToDatabase(connection, saveName, idElement);
 
             idElement++;
@@ -449,7 +425,6 @@ public class World {
         PreparedStatement stmt;
         ResultSet rs;
         int i;
-        int nbElements;
         ElementDeJeu elemTemp;
 
         if (connection != null) {
@@ -473,12 +448,10 @@ public class World {
                 this.setWidth(rs.getInt("taillex"));
                 this.setHeight(rs.getInt("tailley"));
 
-            }
-            catch (Exception e ){
+            } catch (Exception e) {
                 System.out.println("ouhde");
                 System.out.println(e);
             }
-
 
 
             //On récupère le pseudo du joueur
@@ -495,8 +468,13 @@ public class World {
 
                 player.setNom(rs.getString("nomperso"));
 
-            }
-            catch (Exception e ){
+                // On génère le personnage du joueur, pour cette version, le personnage ne peut être qu'archer
+                // On l'on veut pouvoir changer le type du personnage dans la sauvegarde, il suffit de rajouter la colonne
+                // "type" dans la table perso
+
+                this.generatePlayer(1);
+
+            } catch (Exception e) {
                 System.out.println(e);
             }
 
@@ -506,7 +484,7 @@ public class World {
             String[] monstres = {"lapin", "loup"};
 
             //D'abord les humanoïdes
-            for (i = 0; i < humanoides.length ; i++){
+            for (i = 0; i < humanoides.length; i++) {
 
                 query = "select * FROM elementdejeu NATURAL JOIN humanoide NATURAL JOIN " +
                         humanoides[i] + " " +
@@ -521,7 +499,7 @@ public class World {
 
                     // Pour chaque personnage de la table, on crée une
                     // nouvelle instance que l'on initie avec les paramètres originels
-                    while (rs.next()){
+                    while (rs.next()) {
 
                         //i est le type de personnage
                         elemTemp = this.generateOnePersonnage(i);
@@ -532,12 +510,8 @@ public class World {
 
                         // Enfin, on ajoute l'élément à la liste
                         listElements.add(elemTemp);
-
                     }
-
-
-                }
-                catch (Exception e ){
+                } catch (Exception e) {
                     System.out.println(e);
                 }
 
@@ -545,7 +519,7 @@ public class World {
 
 
             //Ensuite les monstres
-            for (i = 0; i < monstres.length ; i++){
+            for (i = 0; i < monstres.length; i++) {
 
                 query = "select * FROM elementdejeu NATURAL JOIN monstre NATURAL JOIN " +
                         monstres[i] + " " +
@@ -560,7 +534,7 @@ public class World {
 
                     // Pour chaque monstre de la table, on crée une
                     // nouvelle instance que l'on initie avec les paramètres originels
-                    while (rs.next()){
+                    while (rs.next()) {
 
                         //i est le type de monstre
                         elemTemp = this.generateOneMonster(i);
@@ -575,10 +549,8 @@ public class World {
                     }
 
 
-                }
-                catch (Exception e ){
+                } catch (Exception e) {
                     System.out.println(e);
-                    System.out.println("okoko");
                 }
 
             }
@@ -597,7 +569,7 @@ public class World {
 
                 // Pour chaque objet de la table, on crée une
                 // nouvelle instance que l'on initie avec les paramètres originels
-                while (rs.next()){
+                while (rs.next()) {
 
                     //0 est le type d'objet Potion
                     elemTemp = this.generateOneObject(0);
@@ -612,20 +584,9 @@ public class World {
                 }
 
 
-            }
-            catch (Exception e ){
+            } catch (Exception e) {
                 System.out.println(e);
             }
-
-            // Nous n'initialisons pas ici le personnage parce qu'il est dans la liste des
-            // personnages
-
-            // Une maj est à attendre dans la base de données et dans le code pour pouvoir mettre
-            // cette fonctionnalité en place
-
-
-
-
         }
     }
 }

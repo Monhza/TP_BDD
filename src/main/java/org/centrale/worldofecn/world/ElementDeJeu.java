@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------
  * WoE
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
@@ -9,11 +9,11 @@
 package org.centrale.worldofecn.world;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Random;
 
 /**
- *
  * @author ECN
  */
 public abstract class ElementDeJeu {
@@ -21,6 +21,7 @@ public abstract class ElementDeJeu {
 
     /**
      * generate element in the world
+     *
      * @param world
      */
     public ElementDeJeu(World world) {
@@ -39,15 +40,34 @@ public abstract class ElementDeJeu {
     }
 
     /**
-     *
      * @param connection
      */
-    public abstract void saveToDatabase(Connection connection, String saveName, int idElement);
+    public void saveToDatabase(Connection connection, String saveName, int idElement) {
+        String query;
+        PreparedStatement stmt;
+
+        // D'abord, on entre les coordonnées de l'objet dans la table correspondante
+        query = "INSERT INTO elementdejeu (idelement, idsauvegarde, positionx, positiony)\n" +
+                "VALUES (?, ?, ?, ?);";
+        try {
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1, idElement);
+            stmt.setString(2, saveName);
+            stmt.setInt(3, this.getPosition().getX());
+            stmt.setInt(4, this.getPosition().getY());
+
+
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     /**
      *
      */
-    public void getFromDatabase(ResultSet rs){
+    public void getFromDatabase(ResultSet rs) {
 
         int Xtemp = 0;
         int Ytemp = 0;
@@ -56,7 +76,7 @@ public abstract class ElementDeJeu {
             Xtemp = rs.getInt("positionx");
             Ytemp = rs.getInt("positiony");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -65,5 +85,6 @@ public abstract class ElementDeJeu {
 
         // Nous n'avons pas encore implémenté les autres paramètres qu'il sera donc
         // Inutile de donner à l'instance
-    };
+    }
+
 }

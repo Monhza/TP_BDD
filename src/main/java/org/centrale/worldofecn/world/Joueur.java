@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------
  * WoE
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
@@ -8,7 +8,6 @@
 package org.centrale.worldofecn.world;
 
 /**
- *
  * @author ECN
  */
 public class Joueur {
@@ -16,9 +15,8 @@ public class Joueur {
     private String login;
     private String password;
     private Personnage personnage;
-    
+
     /**
-     *
      * @param nom
      */
     public Joueur(String nom) {
@@ -26,7 +24,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @param nom
      * @param login
      * @param password
@@ -38,7 +35,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @return
      */
     public String getNom() {
@@ -46,7 +42,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @param nom
      */
     public void setNom(String nom) {
@@ -54,7 +49,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @return
      */
     public String getLogin() {
@@ -62,7 +56,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @param login
      */
     public void setLogin(String login) {
@@ -70,7 +63,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @return
      */
     public String getPassword() {
@@ -78,7 +70,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @param password
      */
     public void setPassword(String password) {
@@ -86,7 +77,6 @@ public class Joueur {
     }
 
     /**
-     *
      * @return
      */
     public Personnage getPersonnage() {
@@ -94,12 +84,9 @@ public class Joueur {
     }
 
     /**
-     *
      * @param personnage
      */
     public void setPersonnage(Personnage personnage) {
         this.personnage = personnage;
     }
-    
-    
 }

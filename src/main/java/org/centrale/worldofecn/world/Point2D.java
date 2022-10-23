@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------------
  * WoE
- * 
+ *
  * Ecole Centrale Nantes - Septembre 2022
  * Equipe pédagogique Informatique et Mathématiques
  * JY Martin
@@ -8,22 +8,20 @@
 package org.centrale.worldofecn.world;
 
 /**
- *
  * @author ECN
  */
 public class Point2D {
     private int x;
     private int y;
-    
+
     /**
      *
      */
     public Point2D() {
-        this(0,0);
+        this(0, 0);
     }
-    
+
     /**
-     *
      * @param x
      * @param y
      */
@@ -31,9 +29,8 @@ public class Point2D {
         this.x = x;
         this.y = y;
     }
-    
+
     /**
-     *
      * @param point
      */
     public Point2D(Point2D point) {
@@ -41,7 +38,6 @@ public class Point2D {
     }
 
     /**
-     *
      * @return
      */
     public int getX() {
@@ -49,7 +45,6 @@ public class Point2D {
     }
 
     /**
-     *
      * @param x
      */
     public void setX(int x) {
@@ -57,7 +52,6 @@ public class Point2D {
     }
 
     /**
-     *
      * @return
      */
     public int getY() {
@@ -65,12 +59,15 @@ public class Point2D {
     }
 
     /**
-     *
      * @param y
      */
     public void setY(int y) {
         this.y = y;
     }
-    
-    
+
+    public void affiche() {
+        System.out.println("[" + this.x + ";" + this.y + "]");
+    }
+
+
 }
